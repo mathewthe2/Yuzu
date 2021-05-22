@@ -1,0 +1,11 @@
+* {
+    font-size: 100%;
+    font-family: ProximaNova;
+   }
+body {
+    padding: 12px;
+}
+@font-face {
+    font-family: ProximaNova;
+    src: url(static/ProximaNova-Light-webfont.woff);
+  }
