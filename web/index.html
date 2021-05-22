@@ -1,5 +1,8 @@
 <html>
     <head>
+        <title>Manga Text Inserter</title>
+        <!-- Eel -->
+        <script type="text/javascript" src="/eel.js"></script>
         <!-- UIkit CSS -->
         <link rel="stylesheet" href="static/uikit.min.css" />
 
@@ -9,13 +12,22 @@
 
         <!-- Local-->
         <link rel="stylesheet" href="index.css">
+        <script src="index.js"></script>
     </head>
     <body>
-        <h3>Projects</h3>
-        <ul class="uk-list uk-link-text">
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-        </ul>
+        <span id="project-select-container">
+            <h3 id="title">Projects</h3>
+            <ul id="project-list" class="uk-list uk-link-text"></ul>
+        </span>
+        <span hidden id="project-detail-container">
+            <a onclick="returnToProjects()" class="uk-icon-link uk-margin-small-right" uk-icon="home"></a>
+            <h3 id="project-title"></h3>
+            <div uk-grid>
+                <div class="uk-width-auto@m">
+                    <ul id="project-thumbnail-container" class="uk-thumbnav uk-thumbnav-vertical" uk-margin></ul>
+                </div>
+            <div id="project-image-container" class="uk-width-expand@m"></div>
+            </div>
+        </span>
     </body>
 </html>
