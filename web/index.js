@@ -2,6 +2,8 @@ let currentProject = {};
 let currentImage = '';
 let currentInputElement;
 
+let mouseOffsetX, mouseOffsetY;
+
 init();
 
 function init() {
@@ -112,29 +114,32 @@ function onClickImageCanvas(e) {
     addInput(e.clientX, e.clientY);
 }
 
-function addInput(x, y) {
+function addInput(x, y, defaultText='') {
 
     var input = document.createElement('div');
 
-    // input.type = 'text';
     input.style.position = 'absolute';
     input.style.left = (x - 4) + 'px';
     input.style.top = (y - 4) + 'px';
+    input.classList.add('vertical-style');
     input.contentEditable = true;
 
-    // orientation
-    input.classList.add('vertical-style');
+    if (defaultText) {
+        input.innerText = defaultText;
+    }
 
-
-    // input.onkeydown = handleEnter;
     input.onblur = handleInputEnter;
     input.ondblclick = modifyInputValue;
     input.onclick = setCurrentInputElement;
-    // input.onkeydown = handleInputDelete;
 
     document.body.appendChild(input);
 
-    focusEditable(input);
+    if (defaultText) {
+        enableDrag(input);
+        input.style.cursor = 'move';
+    } else {
+        focusEditable(input);
+    }
 }
 
 function setCurrentInputElement() {
@@ -147,13 +152,31 @@ function modifyInputValue() {
 }
 
 function handleInputEnter() {
-    //Make the DIV element draggagle:
+    if (this.innerText.trim().length === 0) {
+        document.body.removeChild(this);
+        return
+    } else {
     enableDrag(this);
     this.style.cursor = 'move';
-    console.log(this.innerText);
+    }
+}
+
+onmousemove = event => {
+    mouseOffsetX = event.clientX;
+    mouseOffsetY = event.clientY;
 }
 
 document.addEventListener('keydown', (event) => {
+    // Paste Textbox
+    if(event.metaKey && event.key.toLowerCase() == "v") {
+        eel.get_clipboard()((clipboardText) => {
+            if (clipboardText) {
+                addInput(mouseOffsetX, mouseOffsetY, clipboardText);
+            }
+        });
+    }
+
+    // Remove Textbox
     if (event.key === 'Backspace' || event.key === 'Delete') {
         if (currentInputElement) {
             const isFocused = (document.activeElement === currentInputElement);

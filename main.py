@@ -2,6 +2,7 @@ import eel
 import os
 import threading
 from projects import get_project_list, get_project_data
+from clipboard import get_clipboard_text
 
 def close(page, sockets):
     if not sockets:
@@ -14,6 +15,10 @@ def get_projects():
 @eel.expose
 def get_project(project):
     return get_project_data(project)
+
+@eel.expose
+def get_clipboard():
+    return get_clipboard_text()
 
 def run_eel():
     eel.init('web', allowed_extensions=['.js', '.html', '.map'])
