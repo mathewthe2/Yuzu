@@ -2,8 +2,27 @@
     font-size: 100%;
     font-family: ProximaNova;
    }
-body {
+#project-select-container > h3, #project-select-container > ul {
     padding: 12px;
+}
+#project-title {
+    margin-bottom: 6px;
+}
+#back-to-projects-icon > svg {
+    margin-bottom: 5px;
+}
+.vertical-input {
+    writing-mode: initial;
+    /* transform: rotate(90deg);
+    transform-origin: top left; */
+}
+.vertical-style {
+    -webkit-writing-mode: vertical-rl;
+    -ms-writing-mode: tb-rl;
+    writing-mode: vertical-rl;
+    /* text-orientation: upright; */
+    text-align: initial;
+    font-weight: 400;
 }
 @font-face {
     font-family: ProximaNova;

@@ -53,7 +53,12 @@ function showProjectPage(){
 
     // Project Title
     const projectTitle = document.getElementById('project-title');
-    projectTitle.innerHTML = currentProject.project;
+    projectTitle.innerHTML = `<a
+        id="back-to-projects-icon" 
+        onclick="returnToProjects()"
+        uk-icon="icon: chevron-left; ratio: 1.5"
+        class="uk-icon-link">
+        </a>` + currentProject.project;
 
     // Thumbnail
     currentImage = currentProject.images[0].name;
@@ -91,6 +96,47 @@ function handleSelectThumbnail(element) {
 }
 
 function switchWorkingImage(image) {
-    const projectImageContainer = document.getElementById('project-image-container');
-    projectImageContainer.innerHTML = `<img src="${base64ImageDataToSrc(image)}"></img>`;
+    const projectImageCanvas = document.getElementById('project-image-canvas');
+    const ctx = projectImageCanvas.getContext("2d");
+    const imageElement = new Image();
+    imageElement.src = base64ImageDataToSrc(image);
+    imageElement.onload = () => {
+        projectImageCanvas.width = imageElement.width;
+        projectImageCanvas.height = imageElement.height;
+        ctx.drawImage(imageElement, 0, 0);
+    };
+}
+
+function onClickImageCanvas(e) {
+    addInput(e.clientX, e.clientY);
+}
+
+function addInput(x, y) {
+
+    var input = document.createElement('div');
+
+    // input.type = 'text';
+    input.style.position = 'absolute';
+    input.style.left = (x - 4) + 'px';
+    input.style.top = (y - 4) + 'px';
+    input.contentEditable = true;
+
+    // orientation
+    input.classList.add('vertical-style');
+
+
+    // input.onkeydown = handleEnter;
+    input.onblur = handleEnter;
+
+    document.body.appendChild(input);
+
+    focusEditable(input);
+}
+
+//Key handler for input box:
+function handleEnter() {
+    //Make the DIV element draggagle:
+    enableDrag(this);
+    this.style.cursor = 'move';
+    console.log(this.innerText);
 }

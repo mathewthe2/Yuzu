@@ -12,6 +12,7 @@
 
         <!-- Local-->
         <link rel="stylesheet" href="index.css">
+        <script src="editor.js"></script>
         <script src="index.js"></script>
     </head>
     <body>
@@ -19,14 +20,28 @@
             <h3 id="title">Projects</h3>
             <ul id="project-list" class="uk-list uk-link-text"></ul>
         </span>
+        <!-- <div id="testElement" class="vertical-style" contenteditable>
+            
+        </div> -->
         <span hidden id="project-detail-container">
-            <a onclick="returnToProjects()" class="uk-icon-link uk-margin-small-right" uk-icon="home"></a>
-            <h3 id="project-title"></h3>
-            <div uk-grid>
+            <div class="uk-card uk-card-small uk-card-secondary uk-card-body" uk-sticky>
+                <h3 id="project-title"></h3>
+                <ul class="uk-iconnav">
+                    <li><a href="#" uk-icon="icon: pencil" uk-tooltip="Text"></a></li>
+                    <li><a href="#" uk-icon="icon: copy"></a></li>
+                    <li><a href="#" uk-icon="icon: trash" uk-tooltip="Remove text"></a></li>
+                </ul>
+            </div>
+ 
+            <div uk-grid class="uk-grid-collapse">
                 <div class="uk-width-auto@m">
                     <ul id="project-thumbnail-container" class="uk-thumbnav uk-thumbnav-vertical" uk-margin></ul>
                 </div>
-            <div id="project-image-container" class="uk-width-expand@m"></div>
+            <div id="project-image-container" class="uk-width-auto@m">
+                <canvas ondblclick="onClickImageCanvas(event)" id="project-image-canvas"></canvas>
+            </div>
+            <div class="uk-width-auto@m">
+            </div>
             </div>
         </span>
     </body>
