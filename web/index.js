@@ -1,3 +1,5 @@
+const customizeTextInput = document.getElementById('customize-text-input');
+
 let currentProject = {};
 let currentImage = '';
 let currentInputElement;
@@ -126,14 +128,12 @@ function addInput(x, y, defaultText='') {
 
     if (defaultText) {
         input.innerHTML = defaultText;
-        const currentTextInput = document.getElementById('current-text-input');
-        currentTextInput.innerHTML = defaultText;
+        setCustomizeTextInput(defaultText);
     }
 
     input.onblur = handleInputEnter;
     input.ondblclick = modifyInputValue;
-    // input.onclick = setCurrentInputElement;
-    input.oninput = updateCurrentTextInput;
+    input.oninput = setCustomizeTextInput(this.innerHTML);
 
     document.body.appendChild(input);
 
@@ -145,9 +145,14 @@ function addInput(x, y, defaultText='') {
     }
 }
 
-function updateCurrentTextInput() {
-    const currentTextInput = document.getElementById('current-text-input');
-    currentTextInput.innerHTML = this.innerHTML;
+// function updateCustomizeTextInput() {
+//     setCustomizeTextInput(this.innerHTML);
+// }
+
+function handleCustomizeText(element) {
+    if (currentInputElement) {
+        currentInputElement.innerHTML = element.value;
+    }
 }
 
 function setCurrentInputElement(input) {
@@ -157,8 +162,7 @@ function setCurrentInputElement(input) {
         activateTextbox(input);
     }
 
-    const currentTextInput = document.getElementById('current-text-input');
-    currentTextInput.innerHTML = input.innerHTML;
+    setCustomizeTextInput(input.innerHTML);
 }
 
 function modifyInputValue() {
@@ -204,13 +208,20 @@ document.addEventListener('keydown', (event) => {
     // Remove Textbox
     if (event.key === 'Backspace' || event.key === 'Delete') {
         if (currentInputElement) {
-            const isFocused = (document.activeElement === currentInputElement);
+            const isFocused = (document.activeElement === currentInputElement || document.activeElement === customizeTextInput);
             if (!isFocused) {
                 removeCurrentInputElement();
             }
         }
     }
 });
+
+function setCustomizeTextInput(html) {
+    if (html) {
+        const customizeTextInput = document.getElementById('customize-text-input');
+        customizeTextInput.value = html;
+    }
+}
 
 function removeCurrentInputElement() {
     if (currentInputElement) {
@@ -228,11 +239,13 @@ function clearCurrentInputElement() {
 function activateTextbox(element) {
     if (element) {
         element.classList.add('active-textbox');
+        customizeTextInput.disabled = false;
     }
 }
 
 function deactivateTextbox(element) {
     if (element) {
         element.classList.remove('active-textbox');
+        customizeTextInput.disabled = true;
     }
 }
