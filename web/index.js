@@ -115,7 +115,7 @@ function onClickImageCanvas(e) {
 }
 
 function addInput(x, y, defaultText='') {
-
+    clearCurrentInputElement();
     var input = document.createElement('div');
 
     input.style.position = 'absolute';
@@ -132,13 +132,13 @@ function addInput(x, y, defaultText='') {
 
     input.onblur = handleInputEnter;
     input.ondblclick = modifyInputValue;
-    input.onclick = setCurrentInputElement;
+    // input.onclick = setCurrentInputElement;
     input.oninput = updateCurrentTextInput;
 
     document.body.appendChild(input);
 
     if (defaultText) {
-        enableDrag(input);
+        enableDrag(input, ()=>setCurrentInputElement(input));
         input.style.cursor = 'move';
     } else {
         focusEditable(input);
@@ -150,15 +150,15 @@ function updateCurrentTextInput() {
     currentTextInput.innerHTML = this.innerHTML;
 }
 
-function setCurrentInputElement() {
-    if (currentInputElement !== this) {
+function setCurrentInputElement(input) {
+    if (currentInputElement !== input) {
         deactivateTextbox(currentInputElement);
-        currentInputElement = this;
-        activateTextbox(this);
+        currentInputElement = input;
+        activateTextbox(input);
     }
 
     const currentTextInput = document.getElementById('current-text-input');
-    currentTextInput.innerHTML = this.innerHTML;
+    currentTextInput.innerHTML = input.innerHTML;
 }
 
 function modifyInputValue() {
@@ -172,9 +172,9 @@ function handleInputEnter() {
         document.body.removeChild(this);
         return
     } else {
-    enableDrag(this);
-    this.style.cursor = 'move';
-    deactivateTextbox(this);
+        enableDrag(this, ()=>setCurrentInputElement(this)); 
+        this.style.cursor = 'move';
+        deactivateTextbox(this);
     }
 }
 
@@ -218,7 +218,7 @@ function removeCurrentInputElement() {
     }
 }
 
-function resetCurrentInputElement() {
+function clearCurrentInputElement() {
     if (currentInputElement) {
         deactivateTextbox(currentInputElement);
         currentInputElement = null;

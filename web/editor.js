@@ -23,7 +23,11 @@ function focusEditable(element) {
     sel.addRange(range)
 }
 
-function enableDrag(elmnt) {
+const delta = 6;
+let startX;
+let startY;
+
+function enableDrag(elmnt, startDragFunction, clickFunction) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(elmnt.id + "header")) {
     /* if present, the header is where you move the DIV from:*/
@@ -34,6 +38,11 @@ function enableDrag(elmnt) {
   }
 
   function dragMouseDown(e) {
+    startX = e.pageX;
+    startY = e.pageY;
+    if (startDragFunction) {
+      startDragFunction();
+    }
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
@@ -57,7 +66,8 @@ function enableDrag(elmnt) {
     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
   }
 
-  function closeDragElement() {
+  function closeDragElement(e) {
+
     /* stop moving when mouse button is released:*/
     document.onmouseup = null;
     document.onmousemove = null;
