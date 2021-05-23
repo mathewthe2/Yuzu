@@ -1,5 +1,6 @@
 let currentProject = {};
 let currentImage = '';
+let currentInputElement;
 
 init();
 
@@ -126,17 +127,49 @@ function addInput(x, y) {
 
 
     // input.onkeydown = handleEnter;
-    input.onblur = handleEnter;
+    input.onblur = handleInputEnter;
+    input.ondblclick = modifyInputValue;
+    input.onclick = setCurrentInputElement;
+    // input.onkeydown = handleInputDelete;
 
     document.body.appendChild(input);
 
     focusEditable(input);
 }
 
-//Key handler for input box:
-function handleEnter() {
+function setCurrentInputElement() {
+    currentInputElement = this;
+}
+
+function modifyInputValue() {
+    focusEditable(this);
+    this.style.cursor = 'initial';
+}
+
+function handleInputEnter() {
     //Make the DIV element draggagle:
     enableDrag(this);
     this.style.cursor = 'move';
     console.log(this.innerText);
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+        if (currentInputElement) {
+            const isFocused = (document.activeElement === currentInputElement);
+            if (!isFocused) {
+                removeCurrentInputElement();
+            }
+        }
+    }
+});
+
+function removeCurrentInputElement() {
+    if (currentInputElement) {
+        document.body.removeChild(currentInputElement);
+    }
+}
+
+function resetCurrentInputElement() {
+    currentInputElement = null;
 }

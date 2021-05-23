@@ -27,9 +27,9 @@
             <div class="uk-card uk-card-small uk-card-secondary uk-card-body" uk-sticky>
                 <h3 id="project-title"></h3>
                 <ul class="uk-iconnav">
-                    <li><a href="#" uk-icon="icon: pencil" uk-tooltip="Text"></a></li>
-                    <li><a href="#" uk-icon="icon: copy"></a></li>
-                    <li><a href="#" uk-icon="icon: trash" uk-tooltip="Remove text"></a></li>
+                    <li><a uk-icon="icon: pencil" uk-tooltip="Text"></a></li>
+                    <li><a uk-icon="icon: copy"></a></li>
+                    <li><a onclick="removeCurrentInputElement()" uk-icon="icon: trash" uk-tooltip="Remove text"></a></li>
                 </ul>
             </div>
  
@@ -38,7 +38,7 @@
                     <ul id="project-thumbnail-container" class="uk-thumbnav uk-thumbnav-vertical" uk-margin></ul>
                 </div>
             <div id="project-image-container" class="uk-width-auto@m">
-                <canvas ondblclick="onClickImageCanvas(event)" id="project-image-canvas"></canvas>
+                <canvas onclick="resetCurrentInputElement()" ondblclick="onClickImageCanvas(event)" id="project-image-canvas"></canvas>
             </div>
             <div class="uk-width-auto@m">
             </div>
