@@ -167,6 +167,14 @@ onmousemove = event => {
 }
 
 document.addEventListener('keydown', (event) => {
+    //Copy Textbox
+    if(event.metaKey && event.key.toLowerCase() == "c") {
+        // TODO: copy styles of input element 
+        if (currentInputElement) {
+            eel.paste_to_clipboard(currentInputElement.innerText)();
+        }
+    }
+
     // Paste Textbox
     if(event.metaKey && event.key.toLowerCase() == "v") {
         eel.get_clipboard()((clipboardText) => {
