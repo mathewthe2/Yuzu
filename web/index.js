@@ -126,11 +126,14 @@ function addInput(x, y, defaultText='') {
 
     if (defaultText) {
         input.innerHTML = defaultText;
+        const currentTextInput = document.getElementById('current-text-input');
+        currentTextInput.innerHTML = defaultText;
     }
 
     input.onblur = handleInputEnter;
     input.ondblclick = modifyInputValue;
     input.onclick = setCurrentInputElement;
+    input.oninput = updateCurrentTextInput;
 
     document.body.appendChild(input);
 
@@ -142,13 +145,26 @@ function addInput(x, y, defaultText='') {
     }
 }
 
+function updateCurrentTextInput() {
+    const currentTextInput = document.getElementById('current-text-input');
+    currentTextInput.innerHTML = this.innerHTML;
+}
+
 function setCurrentInputElement() {
-    currentInputElement = this;
+    if (currentInputElement !== this) {
+        deactivateTextbox(currentInputElement);
+        currentInputElement = this;
+        activateTextbox(this);
+    }
+
+    const currentTextInput = document.getElementById('current-text-input');
+    currentTextInput.innerHTML = this.innerHTML;
 }
 
 function modifyInputValue() {
     focusEditable(this);
     this.style.cursor = 'initial';
+    deactivateTextbox(this);
 }
 
 function handleInputEnter() {
@@ -158,6 +174,7 @@ function handleInputEnter() {
     } else {
     enableDrag(this);
     this.style.cursor = 'move';
+    deactivateTextbox(this);
     }
 }
 
@@ -202,5 +219,20 @@ function removeCurrentInputElement() {
 }
 
 function resetCurrentInputElement() {
-    currentInputElement = null;
+    if (currentInputElement) {
+        deactivateTextbox(currentInputElement);
+        currentInputElement = null;
+    }
+}
+
+function activateTextbox(element) {
+    if (element) {
+        element.classList.add('active-textbox');
+    }
+}
+
+function deactivateTextbox(element) {
+    if (element) {
+        element.classList.remove('active-textbox');
+    }
 }

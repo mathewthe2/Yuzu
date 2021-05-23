@@ -24,6 +24,9 @@
     text-align: initial;
     font-weight: 400;
 }
+.active-textbox {
+    color: hotpink;
+}
 rb, rt {
     display: inline;
     line-height: 1;

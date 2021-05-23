@@ -27,6 +27,8 @@ def paste_to_clipboard(text):
 def run_eel():
     eel.init('web', allowed_extensions=['.js', '.html', '.map'])
     eel.start('index.html',
+    height=600,
+    width=1200,
     close_callback=close, 
     port=0
     )
