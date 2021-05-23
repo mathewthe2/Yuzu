@@ -125,7 +125,7 @@ function addInput(x, y, defaultText='') {
     input.contentEditable = true;
 
     if (defaultText) {
-        input.innerText = defaultText;
+        input.innerHTML = defaultText;
     }
 
     input.onblur = handleInputEnter;

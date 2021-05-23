@@ -24,6 +24,15 @@
     text-align: initial;
     font-weight: 400;
 }
+rb, rt {
+    display: inline;
+    line-height: 1;
+}
+ruby > rt {
+    display: block;
+    font-size: 50%;
+    text-align: start;
+}
 @font-face {
     font-family: ProximaNova;
     src: url(static/ProximaNova-Light-webfont.woff);

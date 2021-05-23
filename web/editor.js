@@ -2,8 +2,22 @@ function focusEditable(element) {
     var range = document.createRange()
     var sel = window.getSelection()
 
-    range.setStart(element, 0)
-    range.collapse(true)
+    if (element.innerHTML) {
+      var lastNode = element.childNodes[element.childNodes.length-1];
+      var hasFurigana = lastNode.innerHTML !== undefined;
+      if (hasFurigana) {
+        var textNode = document.createTextNode("\u200B");
+        element.append(textNode);  
+        lastNode = element.childNodes[element.childNodes.length-1];
+        range.setStart(lastNode, lastNode.length);
+      } else {
+        range.setStart(lastNode, lastNode.length);
+      }
+    } else {
+      range.setStart(element,0);
+    }
+
+    range.collapse(false)
 
     sel.removeAllRanges()
     sel.addRange(range)
