@@ -19,7 +19,7 @@
             <ruby>誰<rt>だれ</rt></ruby>
         </div> -->
         <span hidden id="project-detail-container">
-            <div class="uk-card uk-card-small uk-card-secondary uk-card-body" uk-sticky>
+            <div id="project-detail-card" class="uk-card uk-card-small uk-card-secondary uk-card-body" uk-sticky>
                 <h3 id="project-title"></h3>
                 <ul class="uk-iconnav">
                     <li><a uk-icon="icon: pencil" uk-tooltip="Text"></a></li>
@@ -35,9 +35,9 @@
             <div id="project-image-container" class="uk-width-auto@m">
                 <canvas onclick="clearCurrentInputElement()" ondblclick="onClickImageCanvas(event)" id="project-image-canvas"></canvas>
             </div>
-            <div class="uk-width-auto@m">
-                <div id="customize-container" class="uk-card uk-card-default uk-card-small uk-card-body">
-                    <!-- <h3 class="uk-card-title">Text</h3> -->
+            <div class="uk-width-expand@m">
+                <div id="customize-container" uk-sticky="offset: 110" class="uk-card uk-card-default uk-card-small uk-card-body">
+                    <label class="uk-form-label">Text</label>
                     <textarea disabled oninput="handleCustomizeText(this)" id="customize-text-input" class="uk-textarea"></textarea>
                 </div>
             </div>
