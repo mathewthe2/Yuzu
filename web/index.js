@@ -3,6 +3,7 @@ const customizeTextInput = document.getElementById('customize-text-input');
 let currentProject = {};
 let currentImage = '';
 let currentInputElement;
+let currentProjectImageToTextDataMap = {};
 
 let mouseOffsetX, mouseOffsetY;
 
@@ -95,7 +96,9 @@ function handleSelectThumbnail(element) {
         const previousSelectedThumbnailElement = document.getElementById(`thumbnail_${currentImage}`)
         previousSelectedThumbnailElement.classList.remove('uk-active');
         element.classList.add('uk-active');
+        removeWorkingImageTextData(currentImage);
         currentImage = element.getAttribute('image');
+        loadWorkingImageTextData(currentImage);
         switchWorkingImage(currentProject.images.find(image=>image.name === currentImage));
     }
 }
@@ -113,7 +116,8 @@ function switchWorkingImage(image) {
 }
 
 function onClickImageCanvas(e) {
-    addInput(e.clientX, e.clientY);
+    const input = addInput(e.clientX, e.clientY);
+    cacheTextData(input);
 }
 
 function addInput(x, y, defaultText='') {
@@ -143,6 +147,7 @@ function addInput(x, y, defaultText='') {
     } else {
         focusEditable(input);
     }
+    return input;
 }
 
 // function updateCustomizeTextInput() {
@@ -198,23 +203,30 @@ document.addEventListener('keydown', (event) => {
 
     // Paste Textbox
     if(event.metaKey && event.key.toLowerCase() == "v") {
-        eel.get_clipboard()((clipboardText) => {
-            if (clipboardText) {
-                addInput(mouseOffsetX, mouseOffsetY, clipboardText);
-            }
-        });
+        if (!isCustomizeActive()) {
+            eel.get_clipboard()((clipboardText) => {
+                if (clipboardText) {
+                    const input = addInput(mouseOffsetX, mouseOffsetY, clipboardText);
+                    cacheTextData(input);
+                }
+            });
+        }
     }
 
     // Remove Textbox
     if (event.key === 'Backspace' || event.key === 'Delete') {
         if (currentInputElement) {
-            const isFocused = (document.activeElement === currentInputElement || document.activeElement === customizeTextInput);
+            const isFocused = (document.activeElement === currentInputElement || isCustomizeActive());
             if (!isFocused) {
                 removeCurrentInputElement();
             }
         }
     }
 });
+
+function isCustomizeActive() {
+    return document.activeElement === customizeTextInput;
+}
 
 function setCustomizeTextInput(html) {
     if (html) {
@@ -226,6 +238,7 @@ function setCustomizeTextInput(html) {
 function removeCurrentInputElement() {
     if (currentInputElement) {
         document.body.removeChild(currentInputElement);
+        removeCachedTextData(currentInputElement);
     }
 }
 
@@ -248,4 +261,47 @@ function deactivateTextbox(element) {
         element.classList.remove('active-textbox');
         customizeTextInput.disabled = true;
     }
+}
+
+function cacheTextData(inputElement) {
+    if (!(currentImage in currentProjectImageToTextDataMap)) {
+        currentProjectImageToTextDataMap[currentImage] = [];
+    }
+    const inputData = {
+        element: inputElement
+    }
+    currentProjectImageToTextDataMap[currentImage].push(inputData);
+}
+
+function removeCachedTextData(inputElement) {
+    if (currentImage in currentProjectImageToTextDataMap) {
+        const updatedList = currentProjectImageToTextDataMap[currentImage].filter(inputData => inputData.element !== inputElement);
+        currentProjectImageToTextDataMap[currentImage] = updatedList;
+    }
+}
+
+function loadWorkingImageTextData(image) {
+    if (image in currentProjectImageToTextDataMap) {
+        const reloadedInputElements = [];
+        currentProjectImageToTextDataMap[image].forEach(inputData=>{
+            const x = parseInt(inputData.element.style.left, 10) + 4;
+            const y = parseInt(inputData.element.style.top, 10) + 4;
+            const input = addInput(x, y, inputData.element.innerHTML);
+            const reloadInputData = {
+                element: input
+            }
+            reloadedInputElements.push(reloadInputData);
+        })
+        currentProjectImageToTextDataMap[image] = reloadedInputElements;
+    }
+}
+
+function removeWorkingImageTextData(image) {
+    if (image in currentProjectImageToTextDataMap) {
+        currentProjectImageToTextDataMap[image].forEach(inputData=>{
+            if (document.body.contains(inputData.element)){
+                document.body.removeChild(inputData.element);
+            }
+        })
+    }  
 }
