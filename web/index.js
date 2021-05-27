@@ -1,9 +1,6 @@
 const customizeTextInput = document.getElementById('customize-text-input');
 const projectImageCanvas = document.getElementById('project-image-canvas');
 const projectTextContainer = document.getElementById('project-text-container');
-const textDirectionVerticalRadio = document.getElementById('text-direction-vertical-radio');
-const textDirectionHorizontalRadio = document.getElementById('text-direction-horizontal-radio');
-
 
 let currentProject = {};
 let currentImage = '';
@@ -11,6 +8,7 @@ let currentInputElement;
 let currentProjectImageToTextDataMap = {};
 
 // Input Text Attributes
+let currentInputFontSize = 16;
 let currentInputIsVertical = true;
 
 let mouseOffsetX, mouseOffsetY;
@@ -140,6 +138,8 @@ function addInput(mouseX, mouseY, defaultText='') {
     const CURSOR_OFFSET = 4; 
     input.style.left = (x - CURSOR_OFFSET) + 'px';
     input.style.top = (y - CURSOR_OFFSET) + 'px';
+    input.style.fontSize = currentInputFontSize + 'px';
+
     if (currentInputIsVertical) {
         input.classList.add('vertical-style');
     }
@@ -165,10 +165,6 @@ function addInput(mouseX, mouseY, defaultText='') {
     return input;
 }
 
-// function updateCustomizeTextInput() {
-//     setCustomizeTextInput(this.innerHTML);
-// }
-
 function handleCustomizeText(element) {
     if (currentInputElement) {
         currentInputElement.innerHTML = element.value;
@@ -184,6 +180,7 @@ function setCurrentInputElement(input) {
 
     setCustomizeTextInput(input.innerHTML);
     setTextDirectionRadio(input);
+    setTextFontSizeInput(input);
 }
 
 function modifyInputValue() {
@@ -320,37 +317,4 @@ function removeWorkingImageTextData(image) {
             }
         })
     }  
-}
-
-/** 
- * 
- * Input Attributes
- * 
- */
-function setInputTextDirectionHorizontal() {
-    currentInputIsVertical = false;
-    if (currentInputElement) {
-        if (currentInputElement.classList.contains('vertical-style')) {
-            currentInputElement.classList.remove('vertical-style');
-        }
-    }
-}
-
-function setInputTextDirectionVertical() {
-    currentInputIsVertical = true;
-    if (currentInputElement) {
-        if (!currentInputElement.classList.contains('vertical-style')) {
-            currentInputElement.classList.add('vertical-style');
-        }
-    } 
-}
-
-function setTextDirectionRadio(input) {
-    if (input) {
-        if (input.classList.contains('vertical-style')) {
-            textDirectionVerticalRadio.checked = true;
-        } else {
-            textDirectionHorizontalRadio.checked = true;
-        }
-    }
 }
