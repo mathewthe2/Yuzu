@@ -11,6 +11,17 @@
 #back-to-projects-icon > svg {
     margin-bottom: 5px;
 }
+#project-image-container {
+    position: relative;
+}
+#project-image {
+    max-width: 800px;
+}
+#project-text-container {
+    left: 0px;
+    top: 0px;
+    z-index: 1000;
+}
 .vertical-input {
     writing-mode: initial;
     /* transform: rotate(90deg);

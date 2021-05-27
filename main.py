@@ -31,7 +31,7 @@ def run_eel():
     height=600,
     width=1200,
     close_callback=close, 
-    port=0
+    port=8080
     )
 
 main_thread = threading.Thread(target=run_eel, args=())

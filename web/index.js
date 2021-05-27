@@ -1,4 +1,6 @@
 const customizeTextInput = document.getElementById('customize-text-input');
+const projectImageCanvas = document.getElementById('project-image-canvas');
+const projectTextContainer = document.getElementById('project-text-container');
 
 let currentProject = {};
 let currentImage = '';
@@ -104,7 +106,6 @@ function handleSelectThumbnail(element) {
 }
 
 function switchWorkingImage(image) {
-    const projectImageCanvas = document.getElementById('project-image-canvas');
     const ctx = projectImageCanvas.getContext("2d");
     const imageElement = new Image();
     imageElement.src = base64ImageDataToSrc(image);
@@ -120,13 +121,19 @@ function onClickImageCanvas(e) {
     cacheTextData(input);
 }
 
-function addInput(x, y, defaultText='') {
+function addInput(mouseX, mouseY, defaultText='') {
     clearCurrentInputElement();
     var input = document.createElement('div');
 
     input.style.position = 'absolute';
-    input.style.left = (x - 4) + 'px';
-    input.style.top = (y - 4) + 'px';
+
+    const rect = projectImageCanvas.getBoundingClientRect();
+    const x = mouseX - rect.left; // x position within projectImageCanvas
+    const y = mouseY - rect.top;  // y position within projectImageCanvas
+
+    const CURSOR_OFFSET = 4; 
+    input.style.left = (x - CURSOR_OFFSET) + 'px';
+    input.style.top = (y - CURSOR_OFFSET) + 'px';
     input.classList.add('vertical-style');
     input.contentEditable = true;
 
@@ -139,7 +146,7 @@ function addInput(x, y, defaultText='') {
     input.ondblclick = modifyInputValue;
     input.oninput = setCustomizeTextInput(this.innerHTML);
 
-    document.body.appendChild(input);
+    projectTextContainer.appendChild(input);
 
     if (defaultText) {
         enableDrag(input, ()=>setCurrentInputElement(input));
@@ -178,7 +185,7 @@ function modifyInputValue() {
 
 function handleInputEnter() {
     if (this.innerText.trim().length === 0) {
-        document.body.removeChild(this);
+        projectTextContainer.removeChild(this);
         return
     } else {
         enableDrag(this, ()=>setCurrentInputElement(this)); 
@@ -237,7 +244,7 @@ function setCustomizeTextInput(html) {
 
 function removeCurrentInputElement() {
     if (currentInputElement) {
-        document.body.removeChild(currentInputElement);
+        projectTextContainer.removeChild(currentInputElement);
         removeCachedTextData(currentInputElement);
     }
 }
@@ -299,8 +306,8 @@ function loadWorkingImageTextData(image) {
 function removeWorkingImageTextData(image) {
     if (image in currentProjectImageToTextDataMap) {
         currentProjectImageToTextDataMap[image].forEach(inputData=>{
-            if (document.body.contains(inputData.element)){
-                document.body.removeChild(inputData.element);
+            if (projectTextContainer.contains(inputData.element)){
+                projectTextContainer.removeChild(inputData.element);
             }
         })
     }  
