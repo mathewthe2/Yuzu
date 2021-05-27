@@ -14,7 +14,7 @@
 #project-image-container {
     position: relative;
 }
-#project-image {
+#project-image-canvas {
     max-width: 800px;
 }
 #project-text-container {

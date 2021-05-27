@@ -1,11 +1,17 @@
 const customizeTextInput = document.getElementById('customize-text-input');
 const projectImageCanvas = document.getElementById('project-image-canvas');
 const projectTextContainer = document.getElementById('project-text-container');
+const textDirectionVerticalRadio = document.getElementById('text-direction-vertical-radio');
+const textDirectionHorizontalRadio = document.getElementById('text-direction-horizontal-radio');
+
 
 let currentProject = {};
 let currentImage = '';
 let currentInputElement;
 let currentProjectImageToTextDataMap = {};
+
+// Input Text Attributes
+let currentInputIsVertical = true;
 
 let mouseOffsetX, mouseOffsetY;
 
@@ -134,7 +140,9 @@ function addInput(mouseX, mouseY, defaultText='') {
     const CURSOR_OFFSET = 4; 
     input.style.left = (x - CURSOR_OFFSET) + 'px';
     input.style.top = (y - CURSOR_OFFSET) + 'px';
-    input.classList.add('vertical-style');
+    if (currentInputIsVertical) {
+        input.classList.add('vertical-style');
+    }
     input.contentEditable = true;
 
     if (defaultText) {
@@ -175,6 +183,7 @@ function setCurrentInputElement(input) {
     }
 
     setCustomizeTextInput(input.innerHTML);
+    setTextDirectionRadio(input);
 }
 
 function modifyInputValue() {
@@ -295,7 +304,7 @@ function loadWorkingImageTextData(image) {
             const y = parseInt(inputData.element.style.top, 10) + 4;
             const input = addInput(x, y, inputData.element.innerHTML);
             const reloadInputData = {
-                element: input
+                element: input,
             }
             reloadedInputElements.push(reloadInputData);
         })
@@ -311,4 +320,37 @@ function removeWorkingImageTextData(image) {
             }
         })
     }  
+}
+
+/** 
+ * 
+ * Input Attributes
+ * 
+ */
+function setInputTextDirectionHorizontal() {
+    currentInputIsVertical = false;
+    if (currentInputElement) {
+        if (currentInputElement.classList.contains('vertical-style')) {
+            currentInputElement.classList.remove('vertical-style');
+        }
+    }
+}
+
+function setInputTextDirectionVertical() {
+    currentInputIsVertical = true;
+    if (currentInputElement) {
+        if (!currentInputElement.classList.contains('vertical-style')) {
+            currentInputElement.classList.add('vertical-style');
+        }
+    } 
+}
+
+function setTextDirectionRadio(input) {
+    if (input) {
+        if (input.classList.contains('vertical-style')) {
+            textDirectionVerticalRadio.checked = true;
+        } else {
+            textDirectionHorizontalRadio.checked = true;
+        }
+    }
 }
