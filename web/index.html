@@ -30,8 +30,10 @@
             </div>
  
             <div uk-grid class="uk-grid-collapse">
-                <div class="uk-width-auto@m">
-                    <ul id="project-thumbnail-container" class="uk-thumbnav uk-thumbnav-vertical" uk-margin></ul>
+                <div class="uk-child-width-expand@m">
+                    <div style="height: 500px"  class="uk-panel uk-panel-scrollable">
+                        <ul id="project-thumbnail-container" class="uk-thumbnav uk-thumbnav-vertical" uk-margin></ul>
+                    </div>
                 </div>
             <div id="project-image-container" class="uk-width-auto@m">
                 <canvas onclick="clearCurrentInputElement()" ondblclick="onClickImageCanvas(event)" id="project-image-canvas"></canvas>
