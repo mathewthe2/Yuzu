@@ -73,3 +73,25 @@ function enableDrag(elmnt, startDragFunction, clickFunction) {
     document.onmousemove = null;
   }
 }
+
+function addRotation(element, degree) {
+  element.style.transform = `rotate(${degree}deg)`;
+  element.style.webkitTransform = `rotate(${degree}deg)`;
+  element.style.msTransform = `rotate(${degree}deg)`;
+}
+
+function getRotation(element){
+  var tm = element.style.transform ||
+           element.style.webkitTransform ||
+           element.style.mozTransform ||
+           element.style.msTransform ||
+           element.style.oTransform ||
+           "none";
+  if (tm !== "none") {
+    // var values = tm.split('(')[1].split(')')[0].split(',');
+    // var angle = Math.round(Math.atan2(values[1],values[0]) * (180/Math.PI));
+    var angle = parseInt(tm.split('(')[1].split(')')[0], 10)
+    return (angle < 0 ? angle + 360 : angle); //adding 360 degrees here when angle < 0 is equivalent to adding (2 * Math.PI) radians before
+  }
+  return 0;
+}

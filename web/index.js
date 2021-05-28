@@ -152,11 +152,6 @@ function addInput(left, top, customAttributes) {
     }
     input.contentEditable = true;
 
-    if (customAttributes) {
-        input.innerHTML = customAttributes.text;
-        setCustomizeTextInput(customAttributes.text);
-    }
-
     input.onblur = handleInputEnter;
     input.ondblclick = modifyInputValue;
     input.oninput = setCustomizeTextInput(this.innerHTML);
@@ -164,8 +159,14 @@ function addInput(left, top, customAttributes) {
     projectTextContainer.appendChild(input);
 
     if (customAttributes) {
+        if (customAttributes.style) {
+            input.style.fontSize = customAttributes.style.fontSize;
+            addRotation(input, getRotation(customAttributes));
+        }
         enableDrag(input, ()=>setCurrentInputElement(input));
         input.style.cursor = 'move';
+        input.innerHTML = customAttributes.text;
+        setCustomizeTextInput(customAttributes.text);
     } else {
         focusEditable(input);
     }
@@ -188,6 +189,7 @@ function setCurrentInputElement(input) {
     setCustomizeTextInput(input.innerHTML);
     setTextDirectionRadio(input);
     setTextFontSizeInput(input);
+    setTextRotationInput(input);
 }
 
 function modifyInputValue() {
@@ -305,7 +307,10 @@ function loadWorkingImageTextData(image) {
     if (image in currentProjectImageToTextDataMap) {
         const reloadedInputElements = [];
         currentProjectImageToTextDataMap[image].forEach(inputData=>{
-            const input = addInput(inputData.element.style.left, inputData.element.style.top, {'text': inputData.element.innerHTML});
+            const input = addInput(inputData.element.style.left, inputData.element.style.top, {
+                'text': inputData.element.innerHTML,
+                'style': inputData.element.style
+            });
             const reloadInputData = {
                 element: input,
             }
