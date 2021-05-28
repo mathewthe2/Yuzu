@@ -10,6 +10,7 @@ let currentProjectImageToTextDataMap = {};
 // Input Text Attributes
 let currentInputFontSize = 16;
 let currentInputIsVertical = true;
+let currentInputRotation = 0;
 
 let mouseOffsetX, mouseOffsetY;
 
@@ -121,23 +122,29 @@ function switchWorkingImage(image) {
 }
 
 function onClickImageCanvas(e) {
-    const input = addInput(e.clientX, e.clientY);
+    const inputPosition = mouseCoordinatesToInputStyle(e.clientX, e.clientY);
+    const input = addInput(inputPosition.left, inputPosition.top);
     cacheTextData(input);
 }
 
-function addInput(mouseX, mouseY, defaultText='') {
+function mouseCoordinatesToInputStyle(mouseX, mouseY) {
+    const CURSOR_OFFSET = 4; 
+    const rect = projectImageCanvas.getBoundingClientRect();
+    const x = mouseX - rect.left; // x position within projectImageCanvas
+    const y = mouseY - rect.top;  // y position within projectImageCanvas
+    return {
+        left: (x - CURSOR_OFFSET) + 'px',
+        top: (y - CURSOR_OFFSET) + 'px'
+    }
+}
+
+function addInput(left, top, customAttributes) {
     clearCurrentInputElement();
     var input = document.createElement('div');
 
     input.style.position = 'absolute';
-
-    const rect = projectImageCanvas.getBoundingClientRect();
-    const x = mouseX - rect.left; // x position within projectImageCanvas
-    const y = mouseY - rect.top;  // y position within projectImageCanvas
-
-    const CURSOR_OFFSET = 4; 
-    input.style.left = (x - CURSOR_OFFSET) + 'px';
-    input.style.top = (y - CURSOR_OFFSET) + 'px';
+    input.style.left = left;
+    input.style.top = top;
     input.style.fontSize = currentInputFontSize + 'px';
 
     if (currentInputIsVertical) {
@@ -145,9 +152,9 @@ function addInput(mouseX, mouseY, defaultText='') {
     }
     input.contentEditable = true;
 
-    if (defaultText) {
-        input.innerHTML = defaultText;
-        setCustomizeTextInput(defaultText);
+    if (customAttributes) {
+        input.innerHTML = customAttributes.text;
+        setCustomizeTextInput(customAttributes.text);
     }
 
     input.onblur = handleInputEnter;
@@ -156,7 +163,7 @@ function addInput(mouseX, mouseY, defaultText='') {
 
     projectTextContainer.appendChild(input);
 
-    if (defaultText) {
+    if (customAttributes) {
         enableDrag(input, ()=>setCurrentInputElement(input));
         input.style.cursor = 'move';
     } else {
@@ -219,7 +226,8 @@ document.addEventListener('keydown', (event) => {
         if (!isCustomizeActive()) {
             eel.get_clipboard()((clipboardText) => {
                 if (clipboardText) {
-                    const input = addInput(mouseOffsetX, mouseOffsetY, clipboardText);
+                    const inputPosition = mouseCoordinatesToInputStyle(mouseOffsetX, mouseOffsetY);
+                    const input = addInput(inputPosition.left, inputPosition.top, {'text': clipboardText});
                     cacheTextData(input);
                 }
             });
@@ -297,9 +305,7 @@ function loadWorkingImageTextData(image) {
     if (image in currentProjectImageToTextDataMap) {
         const reloadedInputElements = [];
         currentProjectImageToTextDataMap[image].forEach(inputData=>{
-            const x = parseInt(inputData.element.style.left, 10) + 4;
-            const y = parseInt(inputData.element.style.top, 10) + 4;
-            const input = addInput(x, y, inputData.element.innerHTML);
+            const input = addInput(inputData.element.style.left, inputData.element.style.top, {'text': inputData.element.innerHTML});
             const reloadInputData = {
                 element: input,
             }
